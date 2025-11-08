@@ -36,8 +36,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         # Set up platforms
         await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
         
-        # Register services (services.yaml is auto-loaded, but we register handlers)
-        await async_setup_services(hass, coordinator)
+        # Register services if not already registered
+        if not hasattr(hass.data[DOMAIN], "_services_registered"):
+            await async_setup_services(hass)
+            hass.data[DOMAIN]["_services_registered"] = True
         
         return True
     except Exception as err:
@@ -50,15 +52,51 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     unload_ok = await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
     if unload_ok:
         hass.data[DOMAIN].pop(entry.entry_id)
+        
+        # Unregister services if no more entries
+        if DOMAIN in hass.data and len([k for k in hass.data[DOMAIN].keys() if k != "_services_registered"]) == 0:
+            hass.services.async_remove(DOMAIN, "set_mode")
+            hass.services.async_remove(DOMAIN, "set_schedule")
+            hass.data[DOMAIN].pop("_services_registered", None)
     
     return unload_ok
 
 
-async def async_setup_services(hass: HomeAssistant, coordinator: IndraV2HDataUpdateCoordinator) -> None:
+def _get_coordinator_for_service(hass: HomeAssistant, call) -> IndraV2HDataUpdateCoordinator | None:
+    """Get the coordinator for a service call."""
+    if DOMAIN not in hass.data:
+        return None
+    
+    # Try to get coordinator from entity_id if provided
+    entity_id = call.data.get("entity_id")
+    if entity_id:
+        # Extract entry_id from entity registry if possible
+        from homeassistant.helpers import entity_registry as er
+        
+        entity_registry = er.async_get(hass)
+        if registry_entry := entity_registry.async_get(entity_id):
+            entry_id = registry_entry.config_entry_id
+            if entry_id and entry_id in hass.data[DOMAIN]:
+                return hass.data[DOMAIN][entry_id]
+    
+    # Otherwise, use the first coordinator
+    coordinators = [v for k, v in hass.data[DOMAIN].items() if k != "_services_registered"]
+    if coordinators:
+        return coordinators[0]
+    
+    return None
+
+
+async def async_setup_services(hass: HomeAssistant) -> None:
     """Set up custom services."""
     
     async def set_mode_service(call):
         """Service to set charger mode."""
+        coordinator = _get_coordinator_for_service(hass, call)
+        if not coordinator:
+            _LOGGER.error("No Indra V2H coordinator found")
+            return
+        
         mode = call.data.get("mode")
         if mode not in MODES:
             _LOGGER.error("Invalid mode: %s", mode)
@@ -66,13 +104,17 @@ async def async_setup_services(hass: HomeAssistant, coordinator: IndraV2HDataUpd
         
         try:
             await coordinator.client.set_mode(mode)
-            
             await coordinator.async_request_refresh()
         except Exception as err:
             _LOGGER.error("Error setting mode: %s", err)
     
     async def set_schedule_service(call):
         """Service to set schedule times."""
+        coordinator = _get_coordinator_for_service(hass, call)
+        if not coordinator:
+            _LOGGER.error("No Indra V2H coordinator found")
+            return
+        
         start_time = call.data.get("start_time")
         end_time = call.data.get("end_time")
         mode = call.data.get("mode", "charge")

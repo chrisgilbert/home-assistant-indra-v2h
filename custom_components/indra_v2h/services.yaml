@@ -4,7 +4,7 @@ set_mode:
   target:
     entity:
       domain: select
-      device_class: indra_v2h
+      integration: indra_v2h
   fields:
     mode:
       name: Mode
@@ -26,7 +26,7 @@ set_schedule:
   target:
     entity:
       domain: select
-      device_class: indra_v2h
+      integration: indra_v2h
   fields:
     mode:
       name: Mode

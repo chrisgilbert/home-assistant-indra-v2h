@@ -252,7 +252,13 @@ This is a community project. For issues or feature requests, please create an is
 
 ## Acknowledgments
 
-- `pyindrav2h` library by creatingwake
+This integration is built on top of the excellent [`pyindrav2h`](https://pypi.org/project/pyindrav2h/) library by [creatingwake](https://github.com/creatingwake). Without their work reverse-engineering the Indra API and creating the Python library, this Home Assistant integration would not be possible.
+
+This integration was vibe coded with [Cursor](https://cursor.sh), an AI-powered code editor.
+
+Special thanks to:
+- **creatingwake** - Author of the `pyindrav2h` library that provides the core API functionality
+- **Cursor** - AI-powered development environment used to build this integration
 - Home Assistant community for integration patterns and examples
 
 ## License

@@ -1,4 +1,8 @@
-"""Client wrapper for pyindrav2h library."""
+"""Client wrapper for pyindrav2h library.
+
+This module wraps the pyindrav2h library (by creatingwake) to provide
+a consistent async API for the Home Assistant integration.
+"""
 from __future__ import annotations
 
 import logging
