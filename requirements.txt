@@ -1,0 +1,3 @@
+# Runtime dependencies for Indra V2H Home Assistant Integration
+pyindrav2h>=0.0.7
+

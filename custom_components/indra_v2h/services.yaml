@@ -1,0 +1,53 @@
+set_mode:
+  name: Set Mode
+  description: Set the Indra V2H charger mode
+  target:
+    entity:
+      domain: select
+      device_class: indra_v2h
+  fields:
+    mode:
+      name: Mode
+      description: The mode to set (idle, charge, discharge, loadmatch, exportmatch, schedule)
+      required: true
+      selector:
+        select:
+          options:
+            - idle
+            - charge
+            - discharge
+            - loadmatch
+            - exportmatch
+            - schedule
+
+set_schedule:
+  name: Set Schedule
+  description: Set a schedule for the Indra V2H charger
+  target:
+    entity:
+      domain: select
+      device_class: indra_v2h
+  fields:
+    mode:
+      name: Mode
+      description: The mode to schedule (charge, discharge)
+      required: false
+      default: charge
+      selector:
+        select:
+          options:
+            - charge
+            - discharge
+    start_time:
+      name: Start Time
+      description: Start time for the schedule (HH:MM format)
+      required: false
+      selector:
+        time:
+    end_time:
+      name: End Time
+      description: End time for the schedule (HH:MM format)
+      required: false
+      selector:
+        time:
+

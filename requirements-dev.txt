@@ -1,0 +1,22 @@
+# Development dependencies for Indra V2H Home Assistant Integration
+
+# Runtime dependencies
+-r requirements.txt
+
+# Development tools
+pytest>=7.0.0
+pytest-homeassistant-custom-component>=0.15.0
+pytest-asyncio>=0.21.0
+pytest-cov>=4.0.0
+pytest-timeout>=2.1.0
+
+# Code quality
+black>=23.0.0
+ruff>=0.1.0
+mypy>=1.0.0
+types-voluptuous>=0.13.0
+
+# Testing utilities
+responses>=0.23.0
+freezegun>=1.2.0
+
