@@ -1,9 +1,10 @@
 {
   "domain": "indra_v2h",
   "name": "Indra V2H",
-  "codeowners": ["@yourusername"],
+  "codeowners": ["@chrisgilbert"],
   "config_flow": true,
   "documentation": "https://github.com/yourusername/indra-v2h-home-assistant",
+  "issue_tracker": "https://github.com/yourusername/indra-v2h-home-assistant/issues",
   "integration_type": "device",
   "iot_class": "cloud_polling",
   "requirements": ["pyindrav2h>=0.0.7"],

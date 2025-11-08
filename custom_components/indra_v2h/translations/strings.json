@@ -1,0 +1,23 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Indra V2H Setup",
+        "description": "Enter your Indra Smart Portal credentials",
+        "data": {
+          "email": "Email",
+          "password": "Password"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Unable to connect to Indra API. Please check your credentials and try again.",
+      "invalid_auth": "Invalid authentication credentials. Please check your email and password.",
+      "unknown": "Unexpected error occurred. Please try again."
+    },
+    "abort": {
+      "already_configured": "This Indra V2H account is already configured."
+    }
+  }
+}
+
